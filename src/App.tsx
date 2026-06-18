@@ -5,10 +5,13 @@ import LoginPage from '@/components/auth/LoginPage'
 import SettingsPage from '@/components/settings/SettingsPage'
 import CashbackList from '@/components/cashbacks/CashbackList'
 import CashbackDetail from '@/components/cashbacks/CashbackDetail'
+import CashbackFormPage from '@/components/cashbacks/CashbackFormPage'
 import PromocodeList from '@/components/promocodes/PromocodeList'
 import PromocodeDetail from '@/components/promocodes/PromocodeDetail'
+import PromocodeFormPage from '@/components/promocodes/PromocodeFormPage'
 import HelpfulList from '@/components/helpful/HelpfulList'
 import HelpfulDetail from '@/components/helpful/HelpfulDetail'
+import HelpfulFormPage from '@/components/helpful/HelpfulFormPage'
 import { useAuth } from '@/hooks/useAuth'
 
 function Spinner() {
@@ -39,6 +42,22 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/cashbacks/new"
+        element={
+          <ProtectedRoute>
+            <CashbackFormPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cashbacks/:id/edit"
+        element={
+          <ProtectedRoute>
+            <CashbackFormPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/cashbacks/:id"
         element={
           <ProtectedRoute>
@@ -55,6 +74,22 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/promocodes/new"
+        element={
+          <ProtectedRoute>
+            <PromocodeFormPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/promocodes/:id/edit"
+        element={
+          <ProtectedRoute>
+            <PromocodeFormPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/promocodes/:id"
         element={
           <ProtectedRoute>
@@ -67,6 +102,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <HelpfulList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/helpful/new"
+        element={
+          <ProtectedRoute>
+            <HelpfulFormPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/helpful/:id/edit"
+        element={
+          <ProtectedRoute>
+            <HelpfulFormPage />
           </ProtectedRoute>
         }
       />

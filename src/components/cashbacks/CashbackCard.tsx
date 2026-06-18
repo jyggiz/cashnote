@@ -1,15 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { Cashback } from '@/types'
 import { isExpired, isExpiringSoon, formatDate } from '@/utils/date'
 import { useAuth } from '@/hooks/useAuth'
 
 interface CashbackCardProps {
   cashback: Cashback
-  onEdit: (cashback: Cashback) => void
   onDelete: (id: string) => void
 }
 
-export default function CashbackCard({ cashback, onEdit, onDelete }: CashbackCardProps) {
+export default function CashbackCard({ cashback, onDelete }: CashbackCardProps) {
+  const navigate = useNavigate()
   const { isAdmin } = useAuth()
   const expired = isExpired(cashback.expiryDate)
   const expiring = !expired && isExpiringSoon(cashback.expiryDate)
@@ -53,7 +53,7 @@ export default function CashbackCard({ cashback, onEdit, onDelete }: CashbackCar
           {isAdmin && (
             <div className="flex gap-1 shrink-0" onClick={e => e.preventDefault()}>
               <button
-                onClick={() => onEdit(cashback)}
+                onClick={() => navigate(`/cashbacks/${cashback.id}/edit`)}
                 className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
                 aria-label="Edit"
               >

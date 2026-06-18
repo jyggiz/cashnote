@@ -76,60 +76,50 @@ export default function HelpfulForm({ initial, onSave, onCancel }: HelpfulFormPr
   const labelCls = 'mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
-      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <form
-        onSubmit={handleSubmit}
-        className="relative z-10 w-full max-w-lg rounded-t-2xl bg-white p-5 shadow-xl dark:bg-gray-900 sm:rounded-2xl max-h-[90vh] overflow-y-auto"
-      >
-        <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-          {initial ? 'Edit Info' : 'Add Info'}
-        </h2>
+    <form onSubmit={handleSubmit}>
+      <div className="space-y-3">
+        <div>
+          <label className={labelCls}>Title *</label>
+          <input className={inputCls} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. How to maximize cashback" />
+        </div>
 
-        <div className="space-y-3">
-          <div>
-            <label className={labelCls}>Title *</label>
-            <input className={inputCls} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. How to maximize cashback" />
+        <div>
+          <label className={labelCls}>Description *</label>
+          <textarea rows={5} className={inputCls} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Detailed information…" />
+        </div>
+
+        <div>
+          <label className={labelCls}>Image URL</label>
+          <input className={inputCls} value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://…" />
+        </div>
+
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <label className={labelCls + ' mb-0'}>Links</label>
+            <button type="button" onClick={addLink} className="text-sm font-medium text-teal-700 dark:text-teal-400">+ Add Link</button>
           </div>
-
-          <div>
-            <label className={labelCls}>Description *</label>
-            <textarea rows={5} className={inputCls} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Detailed information…" />
-          </div>
-
-          <div>
-            <label className={labelCls}>Image URL</label>
-            <input className={inputCls} value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://…" />
-          </div>
-
-          <div>
-            <div className="mb-2 flex items-center justify-between">
-              <label className={labelCls + ' mb-0'}>Links</label>
-              <button type="button" onClick={addLink} className="text-sm font-medium text-teal-700 dark:text-teal-400">+ Add Link</button>
+          {form.links.map((link, i) => (
+            <div key={i} className="mb-2 flex gap-2">
+              <input className={inputCls} value={link.text} onChange={e => updateLink(i, 'text', e.target.value)} placeholder="Label" />
+              <input className={inputCls} value={link.url} onChange={e => updateLink(i, 'url', e.target.value)} placeholder="https://…" />
+              <button type="button" onClick={() => removeLink(i)} className="shrink-0 text-gray-400 hover:text-red-500">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            {form.links.map((link, i) => (
-              <div key={i} className="mb-2 flex gap-2">
-                <input className={inputCls} value={link.text} onChange={e => updateLink(i, 'text', e.target.value)} placeholder="Label" />
-                <input className={inputCls} value={link.url} onChange={e => updateLink(i, 'url', e.target.value)} placeholder="https://…" />
-                <button type="button" onClick={() => removeLink(i)} className="shrink-0 text-gray-400 hover:text-red-500">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
+      </div>
 
-        {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
-        <div className="mt-5 flex gap-3">
-          <button type="button" onClick={onCancel} className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">Cancel</button>
-          <button type="submit" disabled={saving} className="flex-1 rounded-xl bg-teal-700 py-2.5 text-sm font-medium text-white disabled:opacity-60">
-            {saving ? 'Saving…' : 'Save'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="mt-5 flex gap-3">
+        <button type="button" onClick={onCancel} className="flex-1 rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-300">Cancel</button>
+        <button type="submit" disabled={saving} className="flex-1 rounded-xl bg-teal-700 py-2.5 text-sm font-medium text-white disabled:opacity-60">
+          {saving ? 'Saving…' : 'Save'}
+        </button>
+      </div>
+    </form>
   )
 }

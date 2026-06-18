@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { Promocode } from '@/types'
 import { isExpired, isExpiringSoon, formatDate } from '@/utils/date'
 import { useAuth } from '@/hooks/useAuth'
 
 interface PromocodeCardProps {
   promocode: Promocode
-  onEdit: (p: Promocode) => void
   onDelete: (id: string) => void
 }
 
@@ -14,7 +13,8 @@ function discountLabel(p: Promocode): string {
   return `${p.discountValue} ${p.currency ?? ''} off`.trim()
 }
 
-export default function PromocodeCard({ promocode, onEdit, onDelete }: PromocodeCardProps) {
+export default function PromocodeCard({ promocode, onDelete }: PromocodeCardProps) {
+  const navigate = useNavigate()
   const { isAdmin } = useAuth()
   const expired = promocode.expiryDate ? isExpired(promocode.expiryDate) : false
   const expiring = promocode.expiryDate ? !expired && isExpiringSoon(promocode.expiryDate) : false
@@ -43,7 +43,7 @@ export default function PromocodeCard({ promocode, onEdit, onDelete }: Promocode
           {isAdmin && (
             <div className="flex gap-1 shrink-0" onClick={e => e.preventDefault()}>
               <button
-                onClick={() => onEdit(promocode)}
+                onClick={() => navigate(`/promocodes/${promocode.id}/edit`)}
                 className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
                 aria-label="Edit"
               >

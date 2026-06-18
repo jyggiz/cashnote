@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Cashback } from '@/types'
-import { getCashbacks, createCashback, updateCashback, deleteCashback } from '@/services/api'
+import { getCashbacks, deleteCashback } from '@/services/api'
 import { createCashbackSearch } from '@/utils/search'
 import { useAuth } from '@/hooks/useAuth'
 import Layout from '@/components/shared/Layout'
 import SearchBar from '@/components/shared/SearchBar'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import CashbackCard from './CashbackCard'
-import CashbackForm from './CashbackForm'
 
 export default function CashbackList() {
   const { isAdmin } = useAuth()
+  const navigate = useNavigate()
   const [items, setItems] = useState<Cashback[]>([])
   const [filtered, setFiltered] = useState<Cashback[]>([])
   const [loading, setLoading] = useState(true)
-  const [editTarget, setEditTarget] = useState<Cashback | null>(null)
-  const [showForm, setShowForm] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   function load() {
@@ -47,32 +46,11 @@ export default function CashbackList() {
     [items],
   )
 
-  async function handleSave(data: Omit<Cashback, 'id' | 'createdAt' | 'updatedAt'>) {
-    if (editTarget) {
-      await updateCashback(editTarget.id, data)
-    } else {
-      await createCashback(data)
-    }
-    setShowForm(false)
-    setEditTarget(null)
-    load()
-  }
-
   async function handleDelete() {
     if (!deleteId) return
     await deleteCashback(deleteId)
     setDeleteId(null)
     load()
-  }
-
-  function openEdit(cashback: Cashback) {
-    setEditTarget(cashback)
-    setShowForm(true)
-  }
-
-  function openAdd() {
-    setEditTarget(null)
-    setShowForm(true)
   }
 
   return (
@@ -81,7 +59,7 @@ export default function CashbackList() {
       headerRight={
         isAdmin ? (
           <button
-            onClick={openAdd}
+            onClick={() => navigate('/cashbacks/new')}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-700 text-white shadow"
             aria-label="Add cashback"
           >
@@ -104,7 +82,7 @@ export default function CashbackList() {
         <div className="flex flex-col items-center gap-3 pt-16 text-center">
           <p className="text-gray-400 dark:text-gray-500">No cashbacks found.</p>
           {isAdmin && (
-            <button onClick={openAdd} className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-medium text-white">
+            <button onClick={() => navigate('/cashbacks/new')} className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-medium text-white">
               Add first cashback
             </button>
           )}
@@ -116,19 +94,10 @@ export default function CashbackList() {
           <CashbackCard
             key={cashback.id}
             cashback={cashback}
-            onEdit={openEdit}
             onDelete={id => setDeleteId(id)}
           />
         ))}
       </div>
-
-      {showForm && (
-        <CashbackForm
-          initial={editTarget ?? undefined}
-          onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditTarget(null) }}
-        />
-      )}
 
       {deleteId && (
         <ConfirmDialog
