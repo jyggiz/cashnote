@@ -2,9 +2,16 @@ import { getStore } from '@netlify/blobs'
 
 const DATA_KEY = 'data'
 
+function store(name: string) {
+  return getStore({
+    name,
+    siteID: process.env.NETLIFY_SITE_ID ?? '',
+    token: process.env.NETLIFY_TOKEN ?? '',
+  })
+}
+
 export async function readStore<T>(storeName: string): Promise<T[]> {
-  const store = getStore(storeName)
-  const raw = await store.get(DATA_KEY)
+  const raw = await store(storeName).get(DATA_KEY)
   if (!raw) return []
   try {
     return JSON.parse(raw) as T[]
@@ -14,6 +21,5 @@ export async function readStore<T>(storeName: string): Promise<T[]> {
 }
 
 export async function writeStore<T>(storeName: string, items: T[]): Promise<void> {
-  const store = getStore(storeName)
-  await store.set(DATA_KEY, JSON.stringify(items))
+  await store(storeName).set(DATA_KEY, JSON.stringify(items))
 }
