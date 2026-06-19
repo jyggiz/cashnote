@@ -41,7 +41,10 @@ export default function CashbackList() {
         return
       }
       const fuse = createCashbackSearch(items)
-      setFiltered(fuse.search(query).map(r => r.item))
+      const results = fuse.search(query).map(r => r.item)
+      const resultIds = new Set(results.map(r => r.id))
+      const universals = items.filter(i => i.isUniversal && !resultIds.has(i.id))
+      setFiltered([...universals, ...results])
     },
     [items],
   )

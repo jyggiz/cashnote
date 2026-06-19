@@ -15,6 +15,7 @@ type FormState = {
   cardOwner: 'timur' | 'dinara'
   expiryDate: string
   additionalInfo: string
+  isUniversal: boolean
 }
 
 const EMPTY: FormState = {
@@ -25,6 +26,7 @@ const EMPTY: FormState = {
   cardOwner: 'timur',
   expiryDate: '',
   additionalInfo: '',
+  isUniversal: false,
 }
 
 export default function CashbackForm({ initial, onSave, onCancel }: CashbackFormProps) {
@@ -43,6 +45,7 @@ export default function CashbackForm({ initial, onSave, onCancel }: CashbackForm
         cardOwner: initial.cardOwner,
         expiryDate: initial.expiryDate,
         additionalInfo: initial.additionalInfo ?? '',
+        isUniversal: initial.isUniversal ?? false,
       })
     }
   }, [initial])
@@ -76,6 +79,7 @@ export default function CashbackForm({ initial, onSave, onCancel }: CashbackForm
         cardOwner: form.cardOwner,
         expiryDate: form.expiryDate,
         additionalInfo: form.additionalInfo || undefined,
+        isUniversal: form.isUniversal || undefined,
       })
     } catch {
       setError('Failed to save. Please try again.')
@@ -151,6 +155,19 @@ export default function CashbackForm({ initial, onSave, onCancel }: CashbackForm
             </div>
           )}
         </div>
+
+        <label className="flex items-center gap-3 cursor-pointer rounded-xl border border-gray-200 px-3 py-2.5 dark:border-gray-700">
+          <input
+            type="checkbox"
+            checked={form.isUniversal}
+            onChange={e => setForm(f => ({ ...f, isUniversal: e.target.checked }))}
+            className="h-4 w-4 accent-teal-700"
+          />
+          <div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Applies everywhere</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">Always shown in search results</p>
+          </div>
+        </label>
 
         <div>
           <label className={labelCls}>Additional Info</label>

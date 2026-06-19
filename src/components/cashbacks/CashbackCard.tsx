@@ -24,6 +24,11 @@ export default function CashbackCard({ cashback, onDelete }: CashbackCardProps) 
               <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-sm font-bold text-teal-700 dark:bg-teal-900 dark:text-teal-300">
                 {cashback.cashbackPercent}%
               </span>
+              {cashback.isUniversal && (
+                <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                  Везде
+                </span>
+              )}
             </div>
 
             {cashback.merchants.length > 0 && (

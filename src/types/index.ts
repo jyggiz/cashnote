@@ -7,6 +7,7 @@ export interface Cashback {
   cardOwner: 'timur' | 'dinara'
   expiryDate: string
   additionalInfo?: string
+  isUniversal?: boolean
   createdAt: string
   updatedAt: string
 }
