@@ -21,8 +21,9 @@ export default function CashbackList() {
     setLoading(true)
     getCashbacks()
       .then(data => {
-        setItems(data)
-        setFiltered(data)
+        const sorted = [...data].sort((a, b) => b.cashbackPercent - a.cashbackPercent)
+        setItems(sorted)
+        setFiltered(sorted)
       })
       .finally(() => setLoading(false))
   }
@@ -40,11 +41,17 @@ export default function CashbackList() {
         setFiltered(items)
         return
       }
-      const fuse = createCashbackSearch(items)
-      const results = fuse.search(query).map(r => r.item)
-      const resultIds = new Set(results.map(r => r.id))
+      const fuseResults = createCashbackSearch(items).search(query)
+      const sorted = fuseResults
+        .sort((a, b) => {
+          const composite = (r: typeof a) =>
+            (r.score ?? 1) * 0.7 + (1 - r.item.cashbackPercent / 100) * 0.3
+          return composite(a) - composite(b)
+        })
+        .map(r => r.item)
+      const resultIds = new Set(sorted.map(r => r.id))
       const universals = items.filter(i => i.isUniversal && !resultIds.has(i.id))
-      setFiltered([...universals, ...results])
+      setFiltered([...universals, ...sorted])
     },
     [items],
   )
