@@ -17,7 +17,7 @@ export default function Layout({ title, children, headerRight }: LayoutProps) {
           </div>
         </header>
       )}
-      <main className="mx-auto w-full max-w-lg flex-1 overflow-y-auto px-4 pb-24 pt-4">{children}</main>
+      <main className="mx-auto w-full max-w-lg flex-1 overflow-y-auto px-4 pb-6 pt-4">{children}</main>
       <BottomNav />
     </div>
   )
